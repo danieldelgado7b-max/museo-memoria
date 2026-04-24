@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Museo Urbano de Memorias - Santo Domingo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- PANTALLA DE CARGA -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <p>Cargando mapa del museo...</p>
+        <p class="loading-percent">0%</p>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div id="app-container" style="display: none;">
+        
+        <!-- HEADER CON LOGO -->
+        <header>
+            <div class="header-content">
+                <img src="assets/logo-trash-art.png" alt="Logo Trash Art" class="header-logo">
+                <div class="header-text">
+                    <h1>Museo Urbano de Memorias</h1>
+                    <p>Santo Domingo, Medellín</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAPA CON ZOOM -->
+        <div class="map-wrapper">
+            <div class="map-container" id="map-container">
+                <div class="map-content" id="map-content">
+                    <object id="mapa-svg" data="assets/mapa_museo.svg" type="image/svg+xml">
+                        <p>Tu navegador no soporta SVG</p>
+                    </object>
+                    <div id="hotspots-container"></div>
+                    <div id="user-location" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- CONTROLES DE ZOOM -->
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomIn()">+</button>
+                <button class="zoom-btn" onclick="zoomOut()">−</button>
+                <button class="zoom-btn" onclick="resetZoom()">⌂</button>
+            </div>
+        </div>
+
+        <!-- BRÚJULA FLOTANTE -->
+        <div id="compass" onclick="requestCompassPermission()">
+            <div class="compass-glass-bg"></div>
+            <div class="compass-bg"></div>
+            <div class="compass-needle">
+                <div class="needle-red"></div>
+            </div>
+        </div>
+
+        <!-- VENTANA MODAL -->
+        <div class="modal" id="infoModal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <img src="" alt="Point of interest" class="modal-img" id="modalImg">
+                <h2 id="modalTitle">Title</h2>
+                <p id="modalDesc">Description...</p>
+                <p class="modal-artist" id="modalArtist"></p>
+            </div>
+        </div>
+
+        <!-- VENTANA MODAL DE FILTROS -->
+        <div class="modal" id="filterModal">
+            <div class="modal-content filter-modal">
+                <span class="close-btn" onclick="closeFilterModal()">&times;</span>
+                <h2>Points of Interest</h2>
+                <div class="filter-items">
+                    <div class="filter-item" onclick="applyFilter('todos')" id="filter-todos">
+                        <div class="filter-icons-combined">
+                            <img src="assets/iconos-mapa/icono-inicio.png" alt="Start" class="filter-icon-small">
+                            <img src="assets/iconos-mapa/icono-fin.png" alt="End" class="filter-icon-small">
+                            <img src="assets/iconos-mapa/icono-mural.png" alt="Mural" class="filter-icon-small">
+                        </div>
+                        <h3>All</h3>
+                        <p>Show all points</p>
+                    </div>
+                    <div class="filter-item" onclick="applyFilter('inicio')" id="filter-inicio">
+                        <img src="assets/iconos-mapa/icono-inicio.png" alt="Start" class="filter-icon">
+                        <h3>Start of Tour</h3>
+                        <p>Starting point</p>
+                    </div>
+                    <div class="filter-item" onclick="applyFilter('fin')" id="filter-fin">
+                        <img src="assets/iconos-mapa/icono-fin.png" alt="End" class="filter-icon">
+                        <h3>End of Tour</h3>
+                        <p>Final point</p>
+                    </div>
+                    <div class="filter-item" onclick="applyFilter('murales')" id="filter-murales">
+                        <img src="assets/iconos-mapa/icono-mural.png" alt="Mural" class="filter-icon">
+                        <h3>Murals</h3>
+                        <p>33 Artistic Murals</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VENTANA MODAL DE MURALES -->
+        <div class="modal" id="muralesModal">
+            <div class="modal-content murales-modal">
+                <span class="close-btn" onclick="closeMuralesModal()">&times;</span>
+                <h2>List of Murals</h2>
+                <div class="murales-list" id="muralesList">
+                    <p class="loading-murales">Coming soon: List of 33 murals</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVEGACIÓN INFERIOR -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="openMuralesModal()" id="nav-murales">
+                <img src="assets/icon-murales.png" alt="Murals" class="nav-icon">
+                <span>Murals</span>
+            </button>
+            <button class="nav-item" onclick="openFilterModal()" id="nav-filtrar">
+                <img src="assets/icon-filtros.png" alt="Filter" class="nav-icon">
+                <span>Filter</span>
+            </button>
+            <button class="nav-item" onclick="activateGPS()" id="nav-ubicacion">
+                <img src="assets/icon-ubicacion.png" alt="My Location" class="nav-icon">
+                <span>My Location</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

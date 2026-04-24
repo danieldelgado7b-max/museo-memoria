@@ -1,0 +1,795 @@
+/* ================================
+   ESTILOS GENERALES
+   ================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 0;
+}
+
+/* ================================
+   PANTALLA DE CARGA
+   ================================ */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.9), rgba(52, 152, 219, 0.9));
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: white;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255,255,255,0.3);
+    border-top: 5px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-percent {
+    font-size: 1.5rem;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* ================================
+   CONTENEDOR PRINCIPAL
+   ================================ */
+#app-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0;
+}
+
+/* ================================
+   HEADER
+   ================================ */
+header {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 450px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 12px 20px;
+    z-index: 60;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.header-logo {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.header-text {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-text h1 {
+    font-size: 1.1rem;
+    margin-bottom: 3px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    font-weight: 700;
+}
+
+.header-text p {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ================================
+   MAPA
+   ================================ */
+.map-wrapper {
+    position: relative;
+    width: 95%;
+    max-width: 500px;
+    margin-top: 75px;
+    z-index: 1;
+}
+
+.map-container {
+    position: relative;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    aspect-ratio: 9/16;
+    backdrop-filter: blur(5px);
+    background-image: url('assets/fondo-mapa.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #fff;
+    touch-action: none;
+    cursor: grab;
+    overscroll-behavior: none;
+}
+
+.map-container.grabbing {
+    cursor: grabbing;
+}
+
+.map-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: center center;
+    transition: transform 0.05s ease-out;
+    will-change: transform;
+}
+
+#mapa-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+    background: transparent;
+}
+
+/* ================================
+   ZOOM
+   ================================ */
+.zoom-controls {
+    position: fixed;
+    bottom: 140px;
+    right: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 50;
+}
+
+.zoom-btn {
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.zoom-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+.zoom-btn:active {
+    transform: scale(0.95);
+}
+
+/* ================================
+   BRÚJULA
+   ================================ */
+#compass {
+    position: fixed;
+    bottom: 140px;
+    right: 120px;
+    width: 70px;
+    height: 70px;
+    z-index: 100;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#compass:active {
+    transform: scale(0.95);
+}
+
+.compass-glass-bg {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 2px 10px rgba(255, 255, 255, 0.2);
+    z-index: 1;
+}
+
+.compass-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/compass-bg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 5;
+}
+
+.compass-needle {
+    position: absolute;
+    top: 43%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+    transition: transform 0.1s ease-out;
+    z-index: 10;
+}
+
+.needle-red {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 20px solid #e74c3c;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+/* ================================
+   PINS
+   ================================ */
+.hotspot {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    cursor: pointer;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    transition: transform 0.2s, opacity 0.3s, width 0.1s, height 0.1s;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.hotspot-inicio {
+    background-image: url('assets/iconos-mapa/icono-inicio.png');
+}
+
+.hotspot-fin {
+    background-image: url('assets/iconos-mapa/icono-fin.png');
+}
+
+.hotspot-mural {
+    background-image: url('assets/iconos-mapa/icono-mural.png');
+}
+
+.hotspot:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    animation: none;
+    z-index: 15;
+}
+
+.hotspot.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translate(-50%, -50%) translateY(0);
+    }
+    50% {
+        transform: translate(-50%, -50%) translateY(-1px);
+    }
+}
+
+/* ================================
+   PUNTO GPS DEL USUARIO (SIN LAG)
+   ================================ */
+#user-location {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-image: url('assets/icon-ubicacion.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+    z-index: 20;
+    will-change: transform;
+    animation: pulse-blue 2s infinite;
+}
+
+@keyframes pulse-blue {
+    0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(52, 152, 219, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
+}
+
+/* ================================
+   MODALES
+   ================================ */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 30px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    max-height: 80vh;
+    overflow-y: auto;
+    color: white;
+}
+
+.filter-modal {
+    max-width: 500px;
+}
+
+.filter-modal h2 {
+    margin-bottom: 25px;
+    font-size: 1.6rem;
+}
+
+.filter-items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filter-item {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-item:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.filter-item.active {
+    background: rgba(255, 255, 255, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+}
+
+.filter-icons-combined {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.filter-icon-small {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.filter-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 15px;
+    object-fit: contain;
+}
+
+.filter-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.filter-item p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.5;
+}
+
+.murales-modal {
+    max-width: 500px;
+    max-height: 85vh;
+}
+
+.murales-modal h2 {
+    margin-bottom: 25px;
+    font-size: 1.6rem;
+}
+
+.murales-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.mural-item {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+}
+
+.mural-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateX(5px);
+}
+
+.mural-item .mural-number {
+    background: rgba(255, 255, 255, 0.3);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.mural-item .mural-info h4 {
+    font-size: 1rem;
+    margin-bottom: 3px;
+    color: white;
+}
+
+.mural-item .mural-info p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.loading-murales {
+    text-align: center;
+    padding: 30px;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 32px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: white;
+}
+
+.modal-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-content h2 {
+    color: white;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content p {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.7;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+}
+
+.modal-artist {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ================================
+   NAVEGACIÓN
+   ================================ */
+.bottom-nav {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 8px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.nav-item {
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 12px;
+    transition: all 0.2s;
+}
+
+.nav-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.nav-item span {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-item:hover .nav-icon {
+    opacity: 1;
+}
+
+.nav-item.active {
+    background: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.nav-item.active .nav-icon {
+    opacity: 1;
+}
+
+.nav-item:active {
+    transform: scale(0.95);
+}
+
+/* ================================
+   SCROLLBAR
+   ================================ */
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* ================================
+   MEDIA QUERIES (MÓVIL)
+   ================================ */
+@media (max-width: 768px) {
+    body {
+        padding: 0;
+        align-items: flex-start;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+    }
+    
+    #app-container {
+        padding-top: 0;
+        min-height: 100vh;
+    }
+    
+    header {
+        top: 8px;
+        width: 94%;
+        padding: 10px 15px;
+    }
+    
+    .header-logo {
+        height: 50px;
+    }
+    
+    .header-text h1 {
+        font-size: 1rem;
+    }
+    
+    .header-text p {
+        font-size: 0.7rem;
+    }
+    
+    .map-wrapper {
+        width: 98%;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    
+    .map-container {
+        width: 100%;
+    }
+    
+    .hotspot {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .modal-content {
+        padding: 25px;
+    }
+    
+    .filter-modal {
+        max-width: 90%;
+    }
+    
+    .filter-icon {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .filter-icon-small {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .murales-modal {
+        max-width: 90%;
+    }
+    
+    .bottom-nav {
+        width: 95%;
+        padding: 10px 6px;
+    }
+    
+    .nav-item {
+        padding: 6px 12px;
+    }
+    
+    .nav-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .nav-item span {
+        font-size: 0.65rem;
+    }
+    
+    #compass {
+        width: 60px;
+        height: 60px;
+        bottom: 120px;
+        right: 90px;
+    }
+    
+    .compass-glass-bg {
+        width: 70px;
+        height: 70px;
+        top: -5px;
+        left: -5px;
+    }
+    
+    .needle-red {
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 16px solid #e74c3c;
+    }
+    
+    .zoom-controls {
+        bottom: 120px;
+        right: 30px;
+    }
+    
+    .zoom-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
+    }
+}
