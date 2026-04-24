@@ -19,7 +19,7 @@ let mapRotation = 0;
 let rotationEnabled = true;
 
 /* ================================
-   LÍMITES DEL MAPA (YA FUNCIONARON ANTES)
+   LÍMITES DEL MAPA
    ================================ */
 const mapBounds = {
     north: 6.3007,
@@ -29,26 +29,25 @@ const mapBounds = {
 };
 
 /* ================================
-   PANEL DEBUG (DESACTIVADO PARA PRODUCCIÓN)
+   PANEL DEBUG (DESACTIVADO)
    ================================ */
 let debugPanel = null;
 let debugMessageCount = 0;
 const MAX_DEBUG_MESSAGES = 50;
 
-// DEBUG DESACTIVADO - Solo consola
 function createDebugPanel() {
     return null;
 }
 
 function logDebug(message) {
-    console.log(message); // Solo consola, sin panel visual
+    console.log(message);
 }
 
 /* ================================
    CONVERSIÓN GPS → PORCENTAJES
    ================================ */
-function gpsToMapPercent(lat, lng) {    let latPercent = ((lat - mapBounds.south) / (mapBounds.north - mapBounds.south)) * 100;
-    let lngPercent = ((lng - mapBounds.west) / (mapBounds.east - mapBounds.west)) * 100;
+function gpsToMapPercent(lat, lng) {
+    let latPercent = ((lat - mapBounds.south) / (mapBounds.north - mapBounds.south)) * 100;    let lngPercent = ((lng - mapBounds.west) / (mapBounds.east - mapBounds.west)) * 100;
     
     latPercent = Math.max(0, Math.min(100, latPercent));
     lngPercent = Math.max(0, Math.min(100, lngPercent));
@@ -96,8 +95,8 @@ const murales = [
     { id: 20, tipo: 'mural', nombre: 'Mural 19', descripcion: 'Descripción del mural 19.', artista: 'Por definir', gps: { lat: 6.293908, lng: -75.543672 }, top: 33.5, left: 38.7, imagen: 'assets/murales/mural-19.jpg', activo: true },
     { id: 21, tipo: 'mural', nombre: 'Mural 20', descripcion: 'Descripción del mural 20.', artista: 'Por definir', gps: { lat: 6.293983, lng: -75.5436 }, top: 34.9, left: 42.0, imagen: 'assets/murales/mural-20.jpg', activo: true },
     { id: 22, tipo: 'mural', nombre: 'Mural 21', descripcion: 'Descripción del mural 21.', artista: 'Por definir', gps: { lat: 6.294067, lng: -75.54356 }, top: 35.7, left: 45.0, imagen: 'assets/murales/mural-21.jpg', activo: true },
-    { id: 23, tipo: 'mural', nombre: 'Mural 22', descripcion: 'Descripción del mural 22.', artista: 'Por definir', gps: { lat: 6.29406, lng: -75.54337 }, top: 39.2, left: 44.7, imagen: 'assets/murales/mural-22.jpg', activo: true },    { id: 24, tipo: 'mural', nombre: 'Mural 23', descripcion: 'Descripción del mural 23.', artista: 'Por definir', gps: { lat: 6.293962, lng: -75.54333 }, top: 39.7, left: 44.1, imagen: 'assets/murales/mural-23.jpg', activo: true },
-    { id: 25, tipo: 'mural', nombre: 'Mural 24', descripcion: 'Descripción del mural 24.', artista: 'Por definir', gps: { lat: 6.29406, lng: -75.54337 }, top: 40.4, left: 39.9, imagen: 'assets/murales/mural-24.jpg', activo: true },
+    { id: 23, tipo: 'mural', nombre: 'Mural 22', descripcion: 'Descripción del mural 22.', artista: 'Por definir', gps: { lat: 6.29406, lng: -75.54337 }, top: 39.2, left: 44.7, imagen: 'assets/murales/mural-22.jpg', activo: true },
+    { id: 24, tipo: 'mural', nombre: 'Mural 23', descripcion: 'Descripción del mural 23.', artista: 'Por definir', gps: { lat: 6.293962, lng: -75.54333 }, top: 39.7, left: 44.1, imagen: 'assets/murales/mural-23.jpg', activo: true },    { id: 25, tipo: 'mural', nombre: 'Mural 24', descripcion: 'Descripción del mural 24.', artista: 'Por definir', gps: { lat: 6.29406, lng: -75.54337 }, top: 40.4, left: 39.9, imagen: 'assets/murales/mural-24.jpg', activo: true },
     { id: 26, tipo: 'mural', nombre: 'Mural 25', descripcion: 'Descripción del mural 25.', artista: 'Por definir', gps: { lat: 6.293783, lng: -75.543067 }, top: 45.0, left: 34.8, imagen: 'assets/murales/mural-25.jpg', activo: true },
     { id: 27, tipo: 'mural', nombre: 'Mural 26', descripcion: 'Descripción del mural 26.', artista: 'Por definir', gps: { lat: 6.293652, lng: -75.54308 }, top: 45.2, left: 30.5, imagen: 'assets/murales/mural-26.jpg', activo: true },
     { id: 28, tipo: 'mural', nombre: 'Mural 27', descripcion: 'Descripción del mural 27.', artista: 'Por definir', gps: { lat: 6.2936, lng: -75.542995 }, top: 47.4, left: 28.4, imagen: 'assets/murales/mural-27.jpg', activo: true },
@@ -127,16 +126,13 @@ const puntoFin = {
 let orientationStarted = false;
 let currentHeading = 0;
 let lastHeading = 0;
-
-// ← AJUSTE DE ROTACIÓN: CAMBIA ESTE VALOR
-const ROTATION_OFFSET = 180;  // Prueba: 0, 90, 180, 270, -90
+const ROTATION_OFFSET = 180;
 
 function startOrientation() {
     if (orientationStarted) {
         return;
     }
     
-    logDebug('🧭 Iniciando sensor de orientación...');
     orientationStarted = true;
     
     if (typeof DeviceOrientationEvent === 'undefined') {
@@ -144,29 +140,20 @@ function startOrientation() {
         return;
     }
     
-    logDebug('✅ DeviceOrientationEvent disponible');
-        window.addEventListener('deviceorientation', (event) => {
+    window.addEventListener('deviceorientation', (event) => {
         let heading = 0;
         
         if (event.webkitCompassHeading) {
             heading = event.webkitCompassHeading;
-            logDebug('📱 Usando webkitCompassHeading (iOS)');
-        } else if (event.alpha !== null) {
-            heading = (360 - event.alpha + ROTATION_OFFSET) % 360;
-            logDebug('📱 Usando alpha (Android)');
+        } else if (event.alpha !== null) {            heading = (360 - event.alpha + ROTATION_OFFSET) % 360;
         } else {
-            logDebug('⚠️ No hay datos de orientación');
             return;
         }
         
         currentHeading = heading;
-        logDebug(`🧭 Heading: ${heading.toFixed(1)}°`);
-        
         rotateUserArrow(heading);
         rotateCompassNeedle(heading);
     }, true);
-    
-    logDebug('✅ Sensor iniciado - Esperando eventos...');
 }
 
 /* ================================
@@ -180,7 +167,6 @@ function rotateUserArrow(heading) {
     }
     
     userDot.style.transform = `translate(-50%, -50%) rotate(${heading}deg)`;
-    logDebug(`🔄 Flecha rotada`);
 }
 
 /* ================================
@@ -194,7 +180,8 @@ function rotateCompassNeedle(heading) {
 }
 
 /* ================================
-   ACTUALIZAR POSICIÓN GPS   ================================ */
+   ACTUALIZAR POSICIÓN GPS
+   ================================ */
 function updateUserLocationOnMap(lat, lng) {
     const userDot = document.getElementById('user-location');
     
@@ -204,28 +191,19 @@ function updateUserLocationOnMap(lat, lng) {
     
     const position = gpsToMapPercent(lat, lng);
     
-    logDebug(`📍 GPS recibido: lat=${lat.toFixed(6)}, lng=${lng.toFixed(6)}`);
-    logDebug(`📍 GPS: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
-    logDebug(`📍 Mapa: top=${position.top.toFixed(1)}%, left=${position.left.toFixed(1)}%`);
-    
     userDot.style.top = position.top + '%';
     userDot.style.left = position.left + '%';
     userDot.style.display = 'block';
-    logDebug(`✅ Punto GPS mostrado en mapa`);
 }
-
 /* ================================
    ACTIVAR GPS
    ================================ */
 let watchId = null;
 
 function activateGPS() {
-    logDebug('🔵 Activando GPS...');
-    
     startOrientation();
     
     if (!('geolocation' in navigator)) {
-        logDebug('❌ Geolocation NO soportado');
         alert('Tu navegador no soporta geolocalización');
         return;
     }
@@ -238,31 +216,17 @@ function activateGPS() {
         (position) => {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
-            const accuracy = position.coords.accuracy;
             const heading = position.coords.heading;
             
-            logDebug(`📍 GPS recibido: lat=${lat.toFixed(6)}, lng=${lng.toFixed(6)}, accuracy=${accuracy.toFixed(1)}m`);
+            updateUserLocationOnMap(lat, lng);
             
-            updateUserLocationOnMap(lat, lng);            
             if (heading !== null && !isNaN(heading)) {
-                logDebug(`🧭 GPS heading: ${heading.toFixed(1)}°`);
                 rotateUserArrow(heading);
                 rotateCompassNeedle(heading);
             }
         },
         (error) => {
-            console.error('❌ Error GPS:', error.code, error.message);
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    alert('❌ Permiso de ubicación denegado.');
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert('⚠️ Ubicación no disponible. Acércate a una ventana.');
-                    break;
-                case error.TIMEOUT:
-                    alert('⏱️ Tiempo agotado. Intenta de nuevo.');
-                    break;
-            }
+            console.error('❌ Error GPS:', error.message);
         },
         {
             enableHighAccuracy: true,
@@ -279,20 +243,17 @@ let compassEnabled = false;
 
 function requestCompassPermission() {
     startOrientation();
-    compassEnabled = true;
-    alert('✅ Brújula activada. Gira tu celular.');
+    compassEnabled = true;    alert('✅ Brújula activada. Gira tu celular.');
 }
 
 /* ================================
    PANTALLA DE CARGA
    ================================ */
 window.addEventListener('load', () => {
-    // debugPanel = createDebugPanel(); // DEBUG DESACTIVADO
-    // logDebug('🚀 Página cargada');
-    
     const loadingScreen = document.getElementById('loading-screen');
     const appContainer = document.getElementById('app-container');
-    let percent = 0;    
+    let percent = 0;
+    
     const interval = setInterval(() => {
         percent += 5;
         document.querySelector('.loading-percent').textContent = percent + '%';
@@ -315,7 +276,6 @@ function initMap() {
     createHotspots();
     setupGestures();
     setupPan();
-    logDebug('✅ Mapa inicializado');
 }
 
 /* ================================
@@ -329,11 +289,10 @@ function contarPuntosActivos() {
     return count;
 }
 
-/* ================================   
+/* ================================
    ZOOM
    ================================ */
-function zoomIn() {
-    if (currentZoom < maxZoom) {
+function zoomIn() {    if (currentZoom < maxZoom) {
         currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
         applyTransform();
         updateHotspotSizes();
@@ -341,7 +300,8 @@ function zoomIn() {
 }
 
 function zoomOut() {
-    if (currentZoom > minZoom) {        currentZoom = Math.max(currentZoom - zoomStep, minZoom);
+    if (currentZoom > minZoom) {
+        currentZoom = Math.max(currentZoom - zoomStep, minZoom);
         applyTransform();
         updateHotspotSizes();
     }
@@ -381,8 +341,7 @@ function updateHotspotSizes() {
         const gpsBaseSize = 36;
         const gpsNewSize = gpsBaseSize / currentZoom;
         userLocation.style.width = gpsNewSize + 'px';
-        userLocation.style.height = gpsNewSize + 'px';
-    }
+        userLocation.style.height = gpsNewSize + 'px';    }
 }
 
 /* ================================
@@ -390,7 +349,8 @@ function updateHotspotSizes() {
    ================================ */
 function setupGestures() {
     const mapContainer = document.getElementById('map-container');
-        mapContainer.addEventListener('touchstart', (e) => {
+    
+    mapContainer.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
             isPinching = true;
             isDragging = false;
@@ -430,8 +390,7 @@ function setupPan() {
         if (e.touches.length === 1 && !isPinching) {
             isDragging = true;
             startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            startPanX = panX;
+            startY = e.touches[0].clientY;            startPanX = panX;
             startPanY = panY;
         }
     }, { passive: false });
@@ -439,13 +398,12 @@ function setupPan() {
     mapContainer.addEventListener('touchmove', (e) => {
         if (e.touches.length === 1 && isDragging && !isPinching) {
             e.preventDefault();
-            const dx = e.touches[0].clientX - startX;            const dy = e.touches[0].clientY - startY;
+            const dx = e.touches[0].clientX - startX;
+            const dy = e.touches[0].clientY - startY;
             panX = startPanX + dx;
             panY = startPanY + dy;
             applyTransform();
         }
-    }, { passive: 
-    }
     }, { passive: false });
     
     mapContainer.addEventListener('touchend', () => {
@@ -481,8 +439,7 @@ function createHotspots() {
     murales.forEach(mural => {
         if (mural.activo) {
             const hotspot = document.createElement('div');
-            hotspot.className = 'hotspot hotspot-mural';
-            hotspot.style.top = mural.top + '%';
+            hotspot.className = 'hotspot hotspot-mural';            hotspot.style.top = mural.top + '%';
             hotspot.style.left = mural.left + '%';
             hotspot.onclick = () => openModal(mural);
             container.appendChild(hotspot);
@@ -494,7 +451,8 @@ function createHotspots() {
 
 /* ================================
    FILTROS
-   ================================ */function applyFilter(filterType) {
+   ================================ */
+function applyFilter(filterType) {
     const allHotspots = document.querySelectorAll('.hotspot');
     
     document.querySelectorAll('.filter-item').forEach(item => {
@@ -543,15 +501,15 @@ function openModal(punto) {
     } else {
         document.getElementById('modalImg').style.display = 'none';
     }
-        document.getElementById('infoModal').style.display = 'flex';
+    
+    document.getElementById('infoModal').style.display = 'flex';
 }
 
 function closeModal() {
     document.getElementById('infoModal').style.display = 'none';
 }
 
-document.getElementById('infoModal').onclick = (e) => {
-    if (e.target.id === 'infoModal') {
+document.getElementById('infoModal').onclick = (e) => {    if (e.target.id === 'infoModal') {
         closeModal();
     }
 };
@@ -592,15 +550,15 @@ function loadMuralesList() {
             muralItem.className = 'mural-item';
             muralItem.onclick = () => {
                 closeMuralesModal();
-                openModal(mural);            };
+                openModal(mural);
+            };
             
             muralItem.innerHTML = `
                 <div class="mural-number">${muralNumero}</div>
                 <div class="mural-info">
                     <h4>${mural.nombre}</h4>
                     <p>${mural.descripcion.substring(0, 50)}...</p>
-                </div>
-            `;
+                </div>            `;
             
             container.appendChild(muralItem);
             muralNumero++;
