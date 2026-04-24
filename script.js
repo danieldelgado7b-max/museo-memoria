@@ -29,51 +29,25 @@ const mapBounds = {
 };
 
 /* ================================
-   PANEL DEBUG
+   PANEL DEBUG (DESACTIVADO PARA PRODUCCIÓN)
    ================================ */
 let debugPanel = null;
 let debugMessageCount = 0;
 const MAX_DEBUG_MESSAGES = 50;
 
+// DEBUG DESACTIVADO - Solo consola
 function createDebugPanel() {
-    const debugDiv = document.createElement('div');
-    debugDiv.id = 'debug-panel';
-    debugDiv.style.cssText = `
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        background: rgba(0, 0, 0, 0.85);
-        color: #0f0;
-        padding: 10px;
-        font-size: 11px;
-        max-width: 320px;
-        max-height: 300px;
-        overflow-y: auto;
-        z-index: 99999;
-        font-family: monospace;
-        border-radius: 8px;
-        border: 1px solid #0f0;
-    `;
-    debugDiv.innerHTML = '<strong>🔍 DEBUG:</strong><br>';
-    document.body.appendChild(debugDiv);
-    return debugDiv;
+    return null;
 }
 
 function logDebug(message) {
-    console.log(message);
-    if (debugPanel && debugMessageCount < MAX_DEBUG_MESSAGES) {
-        const time = new Date().toLocaleTimeString();
-        debugPanel.innerHTML += `<div>[${time}] ${message}</div>`;
-        debugPanel.scrollTop = debugPanel.scrollHeight;
-        debugMessageCount++;
-    }
+    console.log(message); // Solo consola, sin panel visual
 }
 
 /* ================================
    CONVERSIÓN GPS → PORCENTAJES
    ================================ */
-function gpsToMapPercent(lat, lng) {
-    let latPercent = ((lat - mapBounds.south) / (mapBounds.north - mapBounds.south)) * 100;
+function gpsToMapPercent(lat, lng) {    let latPercent = ((lat - mapBounds.south) / (mapBounds.north - mapBounds.south)) * 100;
     let lngPercent = ((lng - mapBounds.west) / (mapBounds.east - mapBounds.west)) * 100;
     
     latPercent = Math.max(0, Math.min(100, latPercent));
@@ -122,8 +96,7 @@ const murales = [
     { id: 20, tipo: 'mural', nombre: 'Mural 19', descripcion: 'Descripción del mural 19.', artista: 'Por definir', gps: { lat: 6.293908, lng: -75.543672 }, top: 33.5, left: 38.7, imagen: 'assets/murales/mural-19.jpg', activo: true },
     { id: 21, tipo: 'mural', nombre: 'Mural 20', descripcion: 'Descripción del mural 20.', artista: 'Por definir', gps: { lat: 6.293983, lng: -75.5436 }, top: 34.9, left: 42.0, imagen: 'assets/murales/mural-20.jpg', activo: true },
     { id: 22, tipo: 'mural', nombre: 'Mural 21', descripcion: 'Descripción del mural 21.', artista: 'Por definir', gps: { lat: 6.294067, lng: -75.54356 }, top: 35.7, left: 45.0, imagen: 'assets/murales/mural-21.jpg', activo: true },
-    { id: 23, tipo: 'mural', nombre: 'Mural 22', descripcion: 'Descripción del mural 22.', artista: 'Por definir', gps: { lat: 6.29406, lng: -75.54337 }, top: 39.2, left: 44.7, imagen: 'assets/murales/mural-22.jpg', activo: true },
-    { id: 24, tipo: 'mural', nombre: 'Mural 23', descripcion: 'Descripción del mural 23.', artista: 'Por definir', gps: { lat: 6.293962, lng: -75.54333 }, top: 39.7, left: 44.1, imagen: 'assets/murales/mural-23.jpg', activo: true },
+    { id: 23, tipo: 'mural', nombre: 'Mural 22', descripcion: 'Descripción del mural 22.', artista: 'Por definir', gps: { lat: 6.29406, lng: -75.54337 }, top: 39.2, left: 44.7, imagen: 'assets/murales/mural-22.jpg', activo: true },    { id: 24, tipo: 'mural', nombre: 'Mural 23', descripcion: 'Descripción del mural 23.', artista: 'Por definir', gps: { lat: 6.293962, lng: -75.54333 }, top: 39.7, left: 44.1, imagen: 'assets/murales/mural-23.jpg', activo: true },
     { id: 25, tipo: 'mural', nombre: 'Mural 24', descripcion: 'Descripción del mural 24.', artista: 'Por definir', gps: { lat: 6.29406, lng: -75.54337 }, top: 40.4, left: 39.9, imagen: 'assets/murales/mural-24.jpg', activo: true },
     { id: 26, tipo: 'mural', nombre: 'Mural 25', descripcion: 'Descripción del mural 25.', artista: 'Por definir', gps: { lat: 6.293783, lng: -75.543067 }, top: 45.0, left: 34.8, imagen: 'assets/murales/mural-25.jpg', activo: true },
     { id: 27, tipo: 'mural', nombre: 'Mural 26', descripcion: 'Descripción del mural 26.', artista: 'Por definir', gps: { lat: 6.293652, lng: -75.54308 }, top: 45.2, left: 30.5, imagen: 'assets/murales/mural-26.jpg', activo: true },
@@ -172,8 +145,7 @@ function startOrientation() {
     }
     
     logDebug('✅ DeviceOrientationEvent disponible');
-    
-    window.addEventListener('deviceorientation', (event) => {
+        window.addEventListener('deviceorientation', (event) => {
         let heading = 0;
         
         if (event.webkitCompassHeading) {
@@ -222,8 +194,7 @@ function rotateCompassNeedle(heading) {
 }
 
 /* ================================
-   ACTUALIZAR POSICIÓN GPS
-   ================================ */
+   ACTUALIZAR POSICIÓN GPS   ================================ */
 function updateUserLocationOnMap(lat, lng) {
     const userDot = document.getElementById('user-location');
     
@@ -272,8 +243,7 @@ function activateGPS() {
             
             logDebug(`📍 GPS recibido: lat=${lat.toFixed(6)}, lng=${lng.toFixed(6)}, accuracy=${accuracy.toFixed(1)}m`);
             
-            updateUserLocationOnMap(lat, lng);
-            
+            updateUserLocationOnMap(lat, lng);            
             if (heading !== null && !isNaN(heading)) {
                 logDebug(`🧭 GPS heading: ${heading.toFixed(1)}°`);
                 rotateUserArrow(heading);
@@ -317,13 +287,12 @@ function requestCompassPermission() {
    PANTALLA DE CARGA
    ================================ */
 window.addEventListener('load', () => {
-    debugPanel = createDebugPanel();
-    logDebug('🚀 Página cargada');
+    // debugPanel = createDebugPanel(); // DEBUG DESACTIVADO
+    // logDebug('🚀 Página cargada');
     
     const loadingScreen = document.getElementById('loading-screen');
     const appContainer = document.getElementById('app-container');
-    let percent = 0;
-    
+    let percent = 0;    
     const interval = setInterval(() => {
         percent += 5;
         document.querySelector('.loading-percent').textContent = percent + '%';
@@ -360,7 +329,7 @@ function contarPuntosActivos() {
     return count;
 }
 
-/* ================================
+/* ================================   
    ZOOM
    ================================ */
 function zoomIn() {
@@ -372,8 +341,7 @@ function zoomIn() {
 }
 
 function zoomOut() {
-    if (currentZoom > minZoom) {
-        currentZoom = Math.max(currentZoom - zoomStep, minZoom);
+    if (currentZoom > minZoom) {        currentZoom = Math.max(currentZoom - zoomStep, minZoom);
         applyTransform();
         updateHotspotSizes();
     }
@@ -422,8 +390,7 @@ function updateHotspotSizes() {
    ================================ */
 function setupGestures() {
     const mapContainer = document.getElementById('map-container');
-    
-    mapContainer.addEventListener('touchstart', (e) => {
+        mapContainer.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
             isPinching = true;
             isDragging = false;
@@ -472,12 +439,13 @@ function setupPan() {
     mapContainer.addEventListener('touchmove', (e) => {
         if (e.touches.length === 1 && isDragging && !isPinching) {
             e.preventDefault();
-            const dx = e.touches[0].clientX - startX;
-            const dy = e.touches[0].clientY - startY;
+            const dx = e.touches[0].clientX - startX;            const dy = e.touches[0].clientY - startY;
             panX = startPanX + dx;
             panY = startPanY + dy;
             applyTransform();
         }
+    }, { passive: 
+    }
     }, { passive: false });
     
     mapContainer.addEventListener('touchend', () => {
@@ -526,8 +494,7 @@ function createHotspots() {
 
 /* ================================
    FILTROS
-   ================================ */
-function applyFilter(filterType) {
+   ================================ */function applyFilter(filterType) {
     const allHotspots = document.querySelectorAll('.hotspot');
     
     document.querySelectorAll('.filter-item').forEach(item => {
@@ -576,8 +543,7 @@ function openModal(punto) {
     } else {
         document.getElementById('modalImg').style.display = 'none';
     }
-    
-    document.getElementById('infoModal').style.display = 'flex';
+        document.getElementById('infoModal').style.display = 'flex';
 }
 
 function closeModal() {
@@ -626,8 +592,7 @@ function loadMuralesList() {
             muralItem.className = 'mural-item';
             muralItem.onclick = () => {
                 closeMuralesModal();
-                openModal(mural);
-            };
+                openModal(mural);            };
             
             muralItem.innerHTML = `
                 <div class="mural-number">${muralNumero}</div>
